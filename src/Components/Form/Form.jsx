@@ -14,9 +14,10 @@ function Form(){
         const resultPassword = validatePassword(password);
         if(!resultPassword.isValid){
             console.log("Password doesn't contain required parameters");
-            return false;
+            document.getElementById('password-Input').focus();              //This is the worst case in react where we are using dom manipulation using document.getElementById to focus on the error, this is not a recommended way to use react.
+            // return false;
         }
-        return true;
+        // return true;
     };
 
     const handleValidateEmail = () => {
@@ -25,16 +26,18 @@ function Form(){
         
         if(!resultEmail.isValid){
             console.log("Email does not contain required parameters.");
-            return false;
+            document.getElementById('email-Input').focus();                 //This is the worst case in react where we are using dom manipulation using document.getElementById to focus on the error, this is not a recommended way to use react.
+            // return false;
         }
-        return true;
+        // return true;
     }
 
     const handleFormSubmit = (event) => {
         event.preventDefault();             //To prevent form from refreshing again and again.
         const isPasswordValid = handleValidatePassword();
         if(!isPasswordValid){
-            console.log("Password is invalid");
+            // console.log("Password is invalid");
+
             return;
         }
 
@@ -67,7 +70,7 @@ function Form(){
                         Password :
                     </label>
                     <input 
-                        id="password-input"
+                        id="password-Input"
                         type="password" 
                         value={formValues.password} 
                         onChange={(event) => setFormValues({... formValues, password: event.target.value}) }
