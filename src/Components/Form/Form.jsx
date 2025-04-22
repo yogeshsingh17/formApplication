@@ -1,49 +1,49 @@
-import { useState } from "react";
-import validatePassword from "../../Helper/passwordValidator";
+import { useRef, useState } from "react";
 import validateEmail from "../../Helper/emailValidator";
+import validatePassword from "../../Helper/passwordValidator";
+
 
 function Form(){
+
+    const emailRef = useRef(null);
+    const passwordRef = useRef(null);
 
     const [formValues, setFormValues] = useState({
         email : '',
         password : '',
     })
 
-    const handleValidatePassword = () => {
-        const password = formValues.password;
-        const resultPassword = validatePassword(password);
-        if(!resultPassword.isValid){
-            console.log("Password doesn't contain required parameters");
-            document.getElementById('password-Input').focus();              //This is the worst case in react where we are using dom manipulation using document.getElementById to focus on the error, this is not a recommended way to use react.
-            // return false;
-        }
-        // return true;
-    };
-
     const handleValidateEmail = () => {
         const email =formValues.email;
         const resultEmail = validateEmail(email);
         
         if(!resultEmail.isValid){
+            emailRef.current.focus();                           // This line will help us to focus on the part where the error occured.
             console.log("Email does not contain required parameters.");
-            document.getElementById('email-Input').focus();                 //This is the worst case in react where we are using dom manipulation using document.getElementById to focus on the error, this is not a recommended way to use react.
-            // return false;
+            return false;
         }
-        // return true;
+        return true;
     }
+
+    const handleValidatePassword = () => {
+        const password = formValues.password;
+        const resultPassword = validatePassword(password);
+
+        if(!resultPassword.isValid){
+            passwordRef.current.focus();
+            console.log("Password doesn't contain required parameters");
+            return false;
+        }
+        return true;
+    };
 
     const handleFormSubmit = (event) => {
         event.preventDefault();             //To prevent form from refreshing again and again.
-        const isPasswordValid = handleValidatePassword();
-        if(!isPasswordValid){
-            // console.log("Password is invalid");
-
-            return;
-        }
-
+        
         const isEmailValid = handleValidateEmail();
-        if(!isEmailValid){
-            console.log("Email is invalid");
+        const isPasswordValid = handleValidatePassword();
+        
+        if(!isEmailValid || !isPasswordValid){
             return;
         }
 
@@ -54,12 +54,13 @@ function Form(){
         <>
             <form onSubmit={handleFormSubmit}>
                 <div>
-                    <label htmlFor="">
+                    <label>
                         Email :
                     </label>
                     <input 
                         id="email-Input"
-                        type="email" 
+                        type="text" 
+                        ref={emailRef}
                         value={formValues.email}
                         onChange={(event) => {setFormValues({... formValues, email: event.target.value})}}
                     />
@@ -72,6 +73,7 @@ function Form(){
                     <input 
                         id="password-Input"
                         type="password" 
+                        ref={passwordRef}
                         value={formValues.password} 
                         onChange={(event) => setFormValues({... formValues, password: event.target.value}) }
                     />
