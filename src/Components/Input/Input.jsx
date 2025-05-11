@@ -53,7 +53,7 @@ function Input( {type, id, label, checkOnBlur, placeholder}, ref ){
                 }
             />
 
-            <span> {(!isValid) ? `${label}` : ''} </span>
+            <span> {(!isValid) ? `${label} is invalid` : ''} </span>
         </>
     )
 }
